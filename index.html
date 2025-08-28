@@ -1,1 +1,1945 @@
-Sri Lanka Lottery Number Prediction System
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ලොතරැයි අංක අනුමාන කිරීමේ පද්ධතිය</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff6b6b;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #00cec9;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-reverse: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background: var(--gradient);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* App Header */
+        .app-header {
+            background: var(--gradient);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+
+        .app-header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .date-display {
+            font-size: 0.85rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 70px; /* Space for bottom nav */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            color: var(--gray);
+            font-size: 0.7rem;
+            transition: var(--transition);
+            min-width: 60px;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(25%, -25%);
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            transition: var(--transition);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light);
+            position: relative;
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236a11cb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            transition: var(--transition);
+        }
+
+        select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-add {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-add:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-clear {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background-color: #ee5253;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-clear-history {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-clear-history:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background-color: var(--gray);
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-delete:hover {
+            background-color: #7f8c8d;
+            transform: scale(1.05);
+        }
+
+        .btn-edit {
+            background-color: var(--info);
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-edit:hover {
+            background-color: #00a6a6;
+            transform: scale(1.05);
+        }
+
+        /* Prediction List */
+        .predictions-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .prediction-item {
+            background-color: var(--light);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            animation: slideIn 0.5s ease;
+            width: 100%;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .prediction-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .prediction-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .prediction-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        .prediction-number {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 8px 0;
+            transition: var(--transition);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Number Grid */
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .number-item {
+            position: relative;
+        }
+
+        .number-item input {
+            display: none;
+        }
+
+        .number-item label {
+            display: block;
+            padding: 8px 0;
+            text-align: center;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .number-item input:checked + label {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Selected Numbers - Redesigned */
+        .selected-numbers-container {
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .selected-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 45px;
+            padding: 12px;
+            border: 2px dashed #e1e5eb;
+            border-radius: 10px;
+            width: 100%;
+            background-color: #f9fafb;
+        }
+
+        .selected-number {
+            background: var(--gradient);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .remove-number {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .remove-number:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .empty-selection {
+            color: #95a5a6;
+            text-align: center;
+            width: 100%;
+            font-style: italic;
+            padding: 5px 0;
+        }
+
+        /* Person Numbers */
+        .person-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .person-number {
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* Date Filter */
+        .date-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .date-filter button {
+            padding: 6px 12px;
+            font-size: 12px;
+            min-width: auto;
+        }
+        
+        /* Chart Toggles */
+        .chart-toggles {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-toggle {
+            padding: 8px 15px;
+            background: var(--light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .chart-toggle.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Member Item */
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .member-name {
+            font-weight: 600;
+        }
+        
+        .member-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Export Section */
+        .export-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Number Frequency Grid */
+        .number-frequency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .frequency-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s;
+        }
+        
+        .frequency-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .frequency-number {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .frequency-count {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .frequency-bar {
+            height: 4px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .frequency-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        /* Percentage Display */
+        .percentage-display {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #e1e5eb;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .close {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Animation for chart */
+        .chart-animation {
+            animation: chartFadeIn 1s ease;
+        }
+
+        @keyframes chartFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Pulse animation for stats */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 10px;
+                padding-bottom: 70px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            h2 {
+                font-size: 1.1rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .app-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.7rem;
+            }
+            
+            .number-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .date-filter {
+                justify-content: center;
+            }
+            
+            .date-filter button {
+                flex: 1;
+                min-width: 70px;
+            }
+            
+            button {
+                min-width: 100%;
+            }
+            
+            .number-frequency-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .nav-item {
+                font-size: 0.65rem;
+                min-width: 50px;
+            }
+            
+            .nav-icon {
+                font-size: 1.1rem;
+            }
+            
+            .selected-number {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- App Header -->
+    <header class="app-header">
+        <h1>ලොතරැයි අංක අනුමාන කිරීමේ පද්ධතිය</h1>
+        <div class="date-display" id="current-date">දිනය: ගණනය කිරීම...</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Home Tab -->
+            <div class="tab-content active" id="home-tab">
+                <div class="card">
+                    <h2>අනුමානය ඇතුළත් කරන්න</h2>
+                    
+                    <div class="form-group">
+                        <label for="person-name"><i class="fas fa-user"></i> පුද්ගලයාගේ නම:</label>
+                        <select id="person-name">
+                            <option value="">නම තෝරන්න</option>
+                            <!-- Names will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div id="custom-name-container" style="display: none;">
+                        <div class="form-group">
+                            <label for="custom-name"><i class="fas fa-user-plus"></i> නව පුද්ගලයාගේ නම:</label>
+                            <input type="text" id="custom-name" placeholder="නම ඇතුළත් කරන්න">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-th"></i> අංක තෝරන්න (බහු තේරීම):</label>
+                        <div class="number-grid" id="number-grid">
+                            <!-- Numbers will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> තෝරාගත් අංක:</label>
+                        <div class="selected-numbers-container">
+                            <div class="selected-numbers" id="selected-numbers">
+                                <div class="empty-selection">තෝරාගත් අංක නොමැත</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button class="btn-add" id="add-prediction">
+                            <i class="fas fa-plus"></i> අනුමානය එක් කරන්න
+                        </button>
+                        <button class="btn-clear" id="clear-form">
+                            <i class="fas fa-eraser"></i> හිස් කරන්න
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>සාමාජිකයින්</h2>
+                    <div id="members-list">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>සාමාජිකයින් නොමැත</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-content" id="history-tab">
+                <div class="card">
+                    <h2>
+                        <span>අනුමාන ලැයිස්තුව</span>
+                        <button class="btn-clear-history" id="clear-history">
+                            <i class="fas fa-trash"></i> ඉතිහාසය මකන්න
+                        </button>
+                    </h2>
+                    
+                    <div class="date-filter" id="date-filter">
+                        <button class="btn-clear-history" data-days="0">අද</button>
+                        <button class="btn-clear-history" data-days="1">ඊයේ</button>
+                        <button class="btn-clear-history" data-days="7">ගිය සතිය</button>
+                        <button class="btn-clear-history" data-days="30">ගිය මාසය</button>
+                        <button class="btn-clear-history active" data-days="all">සියලුම</button>
+                    </div>
+                    
+                    <div class="predictions-list" id="predictions-container">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>අනුමාන නොමැත</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Tab -->
+            <div class="tab-content" id="charts-tab">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">මුළු අනුමාන</div>
+                        <div class="stat-value" id="total-predictions">0</div>
+                        <div class="stat-label">අංක</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">ජනප්‍රිය අංකය</div>
+                        <div class="stat-value" id="popular-number">-</div>
+                        <div class="stat-label">අනුමාන</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">අදාල දිනය</div>
+                        <div class="stat-value" id="stats-date">-</div>
+                        <div class="stat-label">ලොතරැයි</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>අනුමාන විශ්ලේෂණය</h2>
+                    
+                    <div class="chart-toggles">
+                        <button class="chart-toggle active" data-chart="bar">තීරු ප්‍රස්තාරය</button>
+                        <button class="chart-toggle" data-chart="pie">පයි ප්‍රස්තාරය</button>
+                        <button class="chart-toggle" data-chart="percentage">ප්‍රතිශත</button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="predictions-chart"></canvas>
+                        <div id="percentage-display" class="percentage-display" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div class="tab-content" id="stats-tab">
+                <div class="card">
+                    <h2>අංක සංඛ්‍යාලේඛන</h2>
+                    <p>සියලුම අංකවල අනුමාන සංඛ්‍යාව</p>
+                    <div class="number-frequency-grid" id="number-frequency-grid">
+                        <!-- Number frequency will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="card export-section">
+                    <h2>දත්ත නිර්යාත කිරීම</h2>
+                    <p>සියලුම දත්ත Excel ගොනුවක් ලෙස බාගත කරගන්න</p>
+                    <div class="buttons">
+                        <button class="btn-add" id="export-data">
+                            <i class="fas fa-download"></i> දත්ත බාගත කරන්න
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" data-tab="home-tab">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <span>මුල් පිටුව</span>
+        </div>
+        <div class="nav-item" data-tab="history-tab">
+            <div class="nav-icon"><i class="fas fa-history"></i></div>
+            <span>ඉතිහාසය</span>
+        </div>
+        <div class="nav-item" data-tab="charts-tab">
+            <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+            <span>ප්‍රස්තාර</span>
+        </div>
+        <div class="nav-item" data-tab="stats-tab">
+            <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+            <span>සංඛ්‍යාලේඛන</span>
+        </div>
+    </nav>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>අනුමානය සංස්කරණය කරන්න</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="edit-form" id="edit-form">
+                <!-- Edit form will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent zooming and text selection
+            document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+            });
+            
+            // Set current date
+            const now = new Date();
+            const formattedDate = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
+            document.getElementById('current-date').textContent = `දිනය: ${formattedDate}`;
+            document.getElementById('stats-date').textContent = formattedDate;
+            
+            // Generate lottery numbers
+            const lotteryNumbers = [];
+            for (let i = 1; i <= 99; i++) {
+                lotteryNumbers.push(i.toString().padStart(2, '0'));
+            }
+            lotteryNumbers.push('00');
+            
+            // Default members
+            const defaultMembers = ["කැළුම්", "විජේ", "වසන්ත", "පේෂල", "හර්ෂ", "ඉඳුවර", "K. K. B."];
+            
+            // Load members from localStorage or use default
+            let members = JSON.parse(localStorage.getItem('lotteryMembers')) || defaultMembers;
+            
+            // Load predictions from localStorage
+            let predictions = JSON.parse(localStorage.getItem('lotteryPredictions')) || [];
+            
+            // Tab navigation functionality
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    document.querySelectorAll('.nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Show selected tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Populate person name dropdown
+            const personNameSelect = document.getElementById('person-name');
+            function updatePersonDropdown() {
+                personNameSelect.innerHTML = '<option value="">නම තෝරන්න</option>';
+                
+                members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member;
+                    option.textContent = member;
+                    personNameSelect.appendChild(option);
+                });
+                
+                const otherOption = document.createElement('option');
+                otherOption.value = 'other';
+                otherOption.textContent = 'වෙනත්';
+                personNameSelect.appendChild(otherOption);
+            }
+            
+            updatePersonDropdown();
+            
+            // Populate number grid
+            const numberGrid = document.getElementById('number-grid');
+            lotteryNumbers.forEach(num => {
+                const numberItem = document.createElement('div');
+                numberItem.className = 'number-item';
+                
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.name = 'grid-number';
+                input.id = `grid-${num}`;
+                input.value = num;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `grid-${num}`;
+                label.textContent = num;
+                
+                numberItem.appendChild(input);
+                numberItem.appendChild(label);
+                numberGrid.appendChild(numberItem);
+                
+                // Add event listener for number selection
+                input.addEventListener('change', updateSelectedNumbers);
+            });
+            
+            // Handle custom name input
+            const customNameContainer = document.getElementById('custom-name-container');
+            
+            personNameSelect.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    customNameContainer.style.display = 'block';
+                } else {
+                    customNameContainer.style.display = 'none';
+                }
+            });
+            
+            // Update selected numbers display
+            function updateSelectedNumbers() {
+                const selectedNumbersContainer = document.getElementById('selected-numbers');
+                selectedNumbersContainer.innerHTML = '';
+                
+                const selectedNumbers = Array.from(document.querySelectorAll('input[name="grid-number"]:checked'))
+                    .map(input => input.value);
+                
+                if (selectedNumbers.length === 0) {
+                    selectedNumbersContainer.innerHTML = '<div class="empty-selection">තෝරාගත් අංක නොමැත</div>';
+                    return;
+                }
+                
+                selectedNumbers.forEach(num => {
+                    const numberElement = document.createElement('div');
+                    numberElement.className = 'selected-number';
+                    numberElement.innerHTML = `
+                        ${num}
+                        <button type="button" class="remove-number" data-number="${num}">×</button>
+                    `;
+                    selectedNumbersContainer.appendChild(numberElement);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-number').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const numberToRemove = this.getAttribute('data-number');
+                        const checkbox = document.getElementById(`grid-${numberToRemove}`);
+                        checkbox.checked = false;
+                        updateSelectedNumbers();
+                    });
+                });
+            }
+            
+            // Add prediction functionality
+            document.getElementById('add-prediction').addEventListener('click', function() {
+                const selectedNumbers = Array.from(document.querySelectorAll('input[name="grid-number"]:checked'))
+                    .map(input => input.value);
+                
+                if (selectedNumbers.length === 0) {
+                    alert('කරුණාකර අවම වශයෙන් එක් අංකයක්වත් තෝරන්න!');
+                    return;
+                }
+                
+                let personName;
+                if (personNameSelect.value === 'other') {
+                    personName = document.getElementById('custom-name').value.trim();
+                    if (!personName) {
+                        alert('කරුණාකර පුද්ගලයාගේ නම ඇතුළත් කරන්න!');
+                        return;
+                    }
+                    
+                    // Add new member if not already in the list
+                    if (!members.includes(personName)) {
+                        members.push(personName);
+                        localStorage.setItem('lotteryMembers', JSON.stringify(members));
+                        updatePersonDropdown();
+                    }
+                } else {
+                    personName = personNameSelect.value;
+                }
+                
+                // Create prediction object
+                const prediction = {
+                    id: Date.now(),
+                    person: personName,
+                    numbers: selectedNumbers,
+                    date: new Date().toISOString()
+                };
+                
+                // Add to predictions array
+                predictions.push(prediction);
+                localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                
+                // Clear form
+                document.querySelectorAll('input[name="grid-number"]:checked').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                personNameSelect.value = '';
+                document.getElementById('custom-name').value = '';
+                customNameContainer.style.display = 'none';
+                updateSelectedNumbers();
+                
+                // Update UI
+                updateMembersList();
+                updatePredictionsList();
+                updateStats();
+                updateCharts();
+                updateNumberFrequencyGrid();
+                
+                // Show success animation
+                const button = document.getElementById('add-prediction');
+                button.innerHTML = '<i class="fas fa-check"></i> සාර්ථකයි!';
+                button.style.backgroundColor = '#2ecc71';
+                
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-plus"></i> අනුමානය එක් කරන්න';
+                    button.style.backgroundColor = '';
+                }, 2000);
+            });
+            
+            // Clear form functionality
+            document.getElementById('clear-form').addEventListener('click', function() {
+                document.querySelectorAll('input[name="grid-number"]:checked').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                personNameSelect.value = '';
+                document.getElementById('custom-name').value = '';
+                customNameContainer.style.display = 'none';
+                updateSelectedNumbers();
+            });
+            
+            // Update members list
+            function updateMembersList() {
+                const membersList = document.getElementById('members-list');
+                membersList.innerHTML = '';
+                
+                if (members.length === 0) {
+                    membersList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>සාමාජිකයින් නොමැත</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                members.forEach(member => {
+                    const memberPredictions = predictions.filter(p => p.person === member);
+                    
+                    const memberItem = document.createElement('div');
+                    memberItem.className = 'member-item';
+                    
+                    const memberInfo = document.createElement('div');
+                    memberInfo.className = 'member-info';
+                    
+                    const memberName = document.createElement('div');
+                    memberName.className = 'member-name';
+                    memberName.textContent = member;
+                    
+                    const personNumbers = document.createElement('div');
+                    personNumbers.className = 'person-numbers';
+                    
+                    // Get unique numbers for this member
+                    const uniqueNumbers = [...new Set(memberPredictions.flatMap(p => p.numbers))];
+                    
+                    uniqueNumbers.slice(0, 5).forEach(num => {
+                        const numberSpan = document.createElement('span');
+                        numberSpan.className = 'person-number';
+                        numberSpan.textContent = num;
+                        personNumbers.appendChild(numberSpan);
+                    });
+                    
+                    if (uniqueNumbers.length > 5) {
+                        const moreSpan = document.createElement('span');
+                        moreSpan.className = 'person-number';
+                        moreSpan.textContent = `+${uniqueNumbers.length - 5}`;
+                        personNumbers.appendChild(moreSpan);
+                    }
+                    
+                    memberInfo.appendChild(memberName);
+                    memberInfo.appendChild(personNumbers);
+                    
+                    const memberActions = document.createElement('div');
+                    memberActions.className = 'member-actions';
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'btn-delete';
+                    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                    deleteButton.addEventListener('click', function() {
+                        if (confirm(`ඔබට ${member} මකා දැමීමට අවශ්‍යද?`)) {
+                            // Remove member
+                            members = members.filter(m => m !== member);
+                            localStorage.setItem('lotteryMembers', JSON.stringify(members));
+                            
+                            // Remove predictions for this member
+                            predictions = predictions.filter(p => p.person !== member);
+                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                            
+                            // Update UI
+                            updatePersonDropdown();
+                            updateMembersList();
+                            updatePredictionsList();
+                            updateStats();
+                            updateCharts();
+                            updateNumberFrequencyGrid();
+                        }
+                    });
+                    
+                    memberActions.appendChild(deleteButton);
+                    
+                    memberItem.appendChild(memberInfo);
+                    memberItem.appendChild(memberActions);
+                    
+                    membersList.appendChild(memberItem);
+                });
+            }
+            
+            // Update predictions list
+            function updatePredictionsList() {
+                const predictionsContainer = document.getElementById('predictions-container');
+                predictionsContainer.innerHTML = '';
+                
+                if (predictions.length === 0) {
+                    predictionsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>අනුමාන නොමැත</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Filter predictions based on date filter
+                const activeFilter = document.querySelector('.date-filter button.active');
+                const daysFilter = activeFilter ? activeFilter.getAttribute('data-days') : 'all';
+                
+                let filteredPredictions = [...predictions];
+                
+                if (daysFilter !== 'all') {
+                    const days = parseInt(daysFilter);
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - days);
+                    
+                    filteredPredictions = predictions.filter(p => {
+                        const predictionDate = new Date(p.date);
+                        return predictionDate >= cutoffDate;
+                    });
+                }
+                
+                if (filteredPredictions.length === 0) {
+                    predictionsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>තෝරාගත් කාල පරාසය සඳහා අනුමාන නොමැත</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                filteredPredictions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                filteredPredictions.forEach(prediction => {
+                    const predictionDate = new Date(prediction.date);
+                    const formattedDate = `${predictionDate.getFullYear()}/${(predictionDate.getMonth() + 1).toString().padStart(2, '0')}/${predictionDate.getDate().toString().padStart(2, '0')}`;
+                    const formattedTime = `${predictionDate.getHours().toString().padStart(2, '0')}:${predictionDate.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    const predictionItem = document.createElement('div');
+                    predictionItem.className = 'prediction-item';
+                    predictionItem.setAttribute('data-id', prediction.id);
+                    
+                    const predictionInfo = document.createElement('div');
+                    predictionInfo.className = 'prediction-info';
+                    
+                    const predictionName = document.createElement('div');
+                    predictionName.className = 'prediction-name';
+                    predictionName.textContent = prediction.person;
+                    
+                    const predictionNumber = document.createElement('div');
+                    predictionNumber.className = 'prediction-number';
+                    predictionNumber.textContent = prediction.numbers.join(', ');
+                    
+                    const predictionMeta = document.createElement('div');
+                    predictionMeta.className = 'prediction-meta';
+                    predictionMeta.innerHTML = `<small>${formattedDate} ${formattedTime}</small>`;
+                    
+                    predictionInfo.appendChild(predictionName);
+                    predictionInfo.appendChild(predictionNumber);
+                    predictionInfo.appendChild(predictionMeta);
+                    
+                    const predictionActions = document.createElement('div');
+                    predictionActions.className = 'prediction-actions';
+                    
+                    const editButton = document.createElement('button');
+                    editButton.className = 'btn-edit';
+                    editButton.innerHTML = '<i class="fas fa-edit"></i>';
+                    editButton.addEventListener('click', function() {
+                        openEditModal(prediction);
+                    });
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'btn-delete';
+                    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                    deleteButton.addEventListener('click', function() {
+                        if (confirm('ඔබට මෙම අනුමානය මකා දැමීමට අවශ්‍යද?')) {
+                            predictions = predictions.filter(p => p.id !== prediction.id);
+                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                            updatePredictionsList();
+                            updateStats();
+                            updateCharts();
+                            updateNumberFrequencyGrid();
+                        }
+                    });
+                    
+                    predictionActions.appendChild(editButton);
+                    predictionActions.appendChild(deleteButton);
+                    
+                    predictionItem.appendChild(predictionInfo);
+                    predictionItem.appendChild(predictionActions);
+                    
+                    predictionsContainer.appendChild(predictionItem);
+                });
+            }
+            
+            // Date filter functionality
+            document.querySelectorAll('.date-filter button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.date-filter button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    updatePredictionsList();
+                });
+            });
+            
+            // Clear history functionality
+            document.getElementById('clear-history').addEventListener('click', function() {
+                if (confirm('ඔබට සියලුම අනුමාන ඉතිහාසය මකා දැමීමට අවශ්‍යද?')) {
+                    predictions = [];
+                    localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                    updatePredictionsList();
+                    updateStats();
+                    updateCharts();
+                    updateNumberFrequencyGrid();
+                }
+            });
+            
+            // Update stats
+            function updateStats() {
+                document.getElementById('total-predictions').textContent = predictions.length;
+                
+                // Find most popular number
+                const numberCounts = {};
+                predictions.forEach(prediction => {
+                    prediction.numbers.forEach(number => {
+                        numberCounts[number] = (numberCounts[number] || 0) + 1;
+                    });
+                });
+                
+                let popularNumber = '-';
+                let maxCount = 0;
+                
+                for (const [number, count] of Object.entries(numberCounts)) {
+                    if (count > maxCount) {
+                        maxCount = count;
+                        popularNumber = number;
+                    }
+                }
+                
+                document.getElementById('popular-number').textContent = popularNumber;
+            }
+            
+            // Chart functionality
+            let predictionsChart = null;
+            
+            function updateCharts() {
+                const ctx = document.getElementById('predictions-chart').getContext('2d');
+                
+                // Count number frequencies
+                const numberCounts = {};
+                lotteryNumbers.forEach(num => {
+                    numberCounts[num] = 0;
+                });
+                
+                predictions.forEach(prediction => {
+                    prediction.numbers.forEach(number => {
+                        if (numberCounts.hasOwnProperty(number)) {
+                            numberCounts[number]++;
+                        }
+                    });
+                });
+                
+                // Prepare data for chart
+                const labels = Object.keys(numberCounts);
+                const data = Object.values(numberCounts);
+                
+                // Get active chart type
+                const activeChart = document.querySelector('.chart-toggle.active');
+                const chartType = activeChart ? activeChart.getAttribute('data-chart') : 'bar';
+                
+                // Destroy existing chart if it exists
+                if (predictionsChart) {
+                    predictionsChart.destroy();
+                }
+                
+                // Show/hide percentage display
+                const percentageDisplay = document.getElementById('percentage-display');
+                if (chartType === 'percentage') {
+                    percentageDisplay.style.display = 'block';
+                    document.getElementById('predictions-chart').style.display = 'none';
+                    
+                    // Calculate percentages
+                    const totalPredictions = predictions.length;
+                    let percentageHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">';
+                    
+                    for (const [number, count] of Object.entries(numberCounts)) {
+                        const percentage = totalPredictions > 0 ? ((count / totalPredictions) * 100).toFixed(1) : 0;
+                        percentageHtml += `
+                            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                <div style="font-weight: bold; font-size: 1.2rem; color: #6a11cb;">${number}</div>
+                                <div style="font-size: 0.9rem;">${percentage}%</div>
+                                <div style="font-size: 0.8rem; color: #95a5a6;">${count} අනුමාන</div>
+                            </div>
+                        `;
+                    }
+                    
+                    percentageHtml += '</div>';
+                    percentageDisplay.innerHTML = percentageHtml;
+                    
+                    return;
+                } else {
+                    percentageDisplay.style.display = 'none';
+                    document.getElementById('predictions-chart').style.display = 'block';
+                }
+                
+                // Create new chart
+                if (chartType === 'pie') {
+                    predictionsChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: labels.map((_, i) => {
+                                    const hue = (i * 137.508) % 360; // Golden angle approximation
+                                    return `hsl(${hue}, 70%, 65%)`;
+                                }),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `අංක ${context.label}: ${context.raw} අනුමාන`;
+                                        }
+                                    }
+                                }
+                            },
+                            animation: {
+                                animateScale: true,
+                                animateRotate: true
+                            }
+                        }
+                    });
+                } else {
+                    predictionsChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'අනුමාන ගණන',
+                                data: data,
+                                backgroundColor: '#6a11cb',
+                                borderColor: '#6a11cb',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'අනුමාන ගණන'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'ලොතරැයි අංක'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `අනුමාන: ${context.raw}`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            // Chart toggle functionality
+            document.querySelectorAll('.chart-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    document.querySelectorAll('.chart-toggle').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    updateCharts();
+                });
+            });
+            
+            // Update number frequency grid
+            function updateNumberFrequencyGrid() {
+                const frequencyGrid = document.getElementById('number-frequency-grid');
+                frequencyGrid.innerHTML = '';
+                
+                if (predictions.length === 0) {
+                    frequencyGrid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>දත්ත නොමැත. අනුමාන ඇතුළත් කරන්න.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Count number frequencies
+                const numberCounts = {};
+                lotteryNumbers.forEach(num => {
+                    numberCounts[num] = 0;
+                });
+                
+                predictions.forEach(prediction => {
+                    prediction.numbers.forEach(number => {
+                        if (numberCounts.hasOwnProperty(number)) {
+                            numberCounts[number]++;
+                        }
+                    });
+                });
+                
+                // Find max count for percentage calculation
+                const maxCount = Math.max(...Object.values(numberCounts));
+                
+                // Create frequency items for all numbers
+                for (const [number, count] of Object.entries(numberCounts)) {
+                    const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+                    
+                    const frequencyItem = document.createElement('div');
+                    frequencyItem.className = 'frequency-item';
+                    
+                    const frequencyNumber = document.createElement('div');
+                    frequencyNumber.className = 'frequency-number';
+                    frequencyNumber.textContent = number;
+                    
+                    const frequencyCount = document.createElement('div');
+                    frequencyCount.className = 'frequency-count';
+                    frequencyCount.textContent = `${count} අනුමාන`;
+                    
+                    const frequencyBar = document.createElement('div');
+                    frequencyBar.className = 'frequency-bar';
+                    
+                    const frequencyFill = document.createElement('div');
+                    frequencyFill.className = 'frequency-fill';
+                    frequencyFill.style.width = `${percentage}%`;
+                    
+                    frequencyBar.appendChild(frequencyFill);
+                    
+                    frequencyItem.appendChild(frequencyNumber);
+                    frequencyItem.appendChild(frequencyCount);
+                    frequencyItem.appendChild(frequencyBar);
+                    
+                    frequencyGrid.appendChild(frequencyItem);
+                }
+            }
+            
+            // Export data functionality
+            document.getElementById('export-data').addEventListener('click', function() {
+                // Prepare data for export
+                const exportData = predictions.map(prediction => {
+                    const date = new Date(prediction.date);
+                    return {
+                        'නම': prediction.person,
+                        'අංක': prediction.numbers.join(', '),
+                        'දිනය': `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`,
+                        'වේලාව': `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+                    };
+                });
+                
+                // Create worksheet
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                
+                // Create workbook
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'අනුමාන');
+                
+                // Generate file and trigger download
+                const date = new Date();
+                const fileName = `ලොතරැයි_අනුමාන_${date.getFullYear()}_${(date.getMonth() + 1).toString().padStart(2, '0')}_${date.getDate().toString().padStart(2, '0')}.xlsx`;
+                
+                XLSX.writeFile(wb, fileName);
+                
+                // Show success animation
+                const button = document.getElementById('export-data');
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> බාගත කර ඇත!';
+                button.style.backgroundColor = '#2ecc71';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHtml;
+                    button.style.backgroundColor = '';
+                }, 2000);
+            });
+            
+            // Edit modal functionality
+            function openEditModal(prediction) {
+                const modal = document.getElementById('edit-modal');
+                const editForm = document.getElementById('edit-form');
+                
+                // Populate form
+                editForm.innerHTML = `
+                    <div class="form-group">
+                        <label for="edit-person-name">පුද්ගලයාගේ නම:</label>
+                        <select id="edit-person-name">
+                            ${members.map(member => `
+                                <option value="${member}" ${member === prediction.person ? 'selected' : ''}>${member}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>අංක තෝරන්න:</label>
+                        <div class="number-grid" id="edit-number-grid">
+                            ${lotteryNumbers.map(num => `
+                                <div class="number-item">
+                                    <input type="checkbox" name="edit-grid-number" id="edit-grid-${num}" value="${num}" ${prediction.numbers.includes(num) ? 'checked' : ''}>
+                                    <label for="edit-grid-${num}">${num}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>තෝරාගත් අංක:</label>
+                        <div class="selected-numbers-container">
+                            <div class="selected-numbers" id="edit-selected-numbers">
+                                ${prediction.numbers.map(num => `
+                                    <div class="selected-number">
+                                        ${num}
+                                        <button type="button" class="remove-number" data-number="${num}">×</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn-add" id="save-edit">
+                        <i class="fas fa-save"></i> ගබඩා කරන්න
+                    </button>
+                `;
+                
+                // Show modal
+                modal.style.display = 'flex';
+                
+                // Add event listeners to number checkboxes
+                document.querySelectorAll('#edit-number-grid input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        updateEditSelectedNumbers();
+                    });
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#edit-selected-numbers .remove-number').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const numberToRemove = this.getAttribute('data-number');
+                        const checkbox = document.getElementById(`edit-grid-${numberToRemove}`);
+                        checkbox.checked = false;
+                        updateEditSelectedNumbers();
+                    });
+                });
+                
+                // Save edit functionality
+                document.getElementById('save-edit').addEventListener('click', function() {
+                    const selectedNumbers = Array.from(document.querySelectorAll('#edit-number-grid input[type="checkbox"]:checked'))
+                        .map(input => input.value);
+                    
+                    if (selectedNumbers.length === 0) {
+                        alert('කරුණාකර අවම වශයෙන් එක් අංකයක්වත් තෝරන්න!');
+                        return;
+                    }
+                    
+                    const personName = document.getElementById('edit-person-name').value;
+                    
+                    // Update prediction
+                    const index = predictions.findIndex(p => p.id === prediction.id);
+                    if (index !== -1) {
+                        predictions[index].person = personName;
+                        predictions[index].numbers = selectedNumbers;
+                        localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                        
+                        // Update UI
+                        updatePredictionsList();
+                        updateMembersList();
+                        updateStats();
+                        updateCharts();
+                        updateNumberFrequencyGrid();
+                        
+                        // Close modal
+                        modal.style.display = 'none';
+                    }
+                });
+                
+                // Close modal when clicking on X
+                document.querySelector('.close').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+                
+                // Close modal when clicking outside
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+            
+            function updateEditSelectedNumbers() {
+                const selectedNumbersContainer = document.getElementById('edit-selected-numbers');
+                selectedNumbersContainer.innerHTML = '';
+                
+                const selectedNumbers = Array.from(document.querySelectorAll('#edit-number-grid input[type="checkbox"]:checked'))
+                    .map(input => input.value);
+                
+                if (selectedNumbers.length === 0) {
+                    selectedNumbersContainer.innerHTML = '<div class="empty-selection">තෝරාගත් අංක නොමැත</div>';
+                    return;
+                }
+                
+                selectedNumbers.forEach(num => {
+                    const numberElement = document.createElement('div');
+                    numberElement.className = 'selected-number';
+                    numberElement.innerHTML = `
+                        ${num}
+                        <button type="button" class="remove-number" data-number="${num}">×</button>
+                    `;
+                    selectedNumbersContainer.appendChild(numberElement);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#edit-selected-numbers .remove-number').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const numberToRemove = this.getAttribute('data-number');
+                        const checkbox = document.getElementById(`edit-grid-${numberToRemove}`);
+                        checkbox.checked = false;
+                        updateEditSelectedNumbers();
+                    });
+                });
+            }
+            
+            // Initialize the application
+            updateMembersList();
+            updatePredictionsList();
+            updateStats();
+            updateCharts();
+            updateNumberFrequencyGrid();
+            
+            // Add pulse animation to stats
+            setInterval(() => {
+                document.querySelectorAll('.stat-value').forEach(value => {
+                    value.classList.toggle('pulse');
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
