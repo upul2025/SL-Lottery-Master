@@ -2,7 +2,7 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ලොතරැයි අංක අනුමාන කිරීමේ පද්ධතිය</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -31,38 +31,44 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
 
         body {
             background: var(--gradient);
             color: var(--dark);
             min-height: 100vh;
-            padding: 0;
+            padding: 15px;
             display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* App Header */
-        .app-header {
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease;
+            margin: 0 auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
             background: var(--gradient);
             color: white;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
-            flex-shrink: 0;
         }
 
-        .app-header::before {
+        header::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -73,109 +79,38 @@
             transform: rotate(30deg);
         }
 
-        .app-header h1 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
             position: relative;
             z-index: 1;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .date-display {
-            font-size: 0.85rem;
+            font-size: 1rem;
+            margin-top: 10px;
             background-color: rgba(255, 255, 255, 0.2);
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 15px;
             border-radius: 30px;
             position: relative;
             z-index: 1;
             backdrop-filter: blur(5px);
         }
 
-        /* Main Content Area */
         .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .left-panel, .right-panel {
             flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 70px; /* Space for bottom nav */
-            -webkit-overflow-scrolling: touch;
+            min-width: 0;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
-            flex-shrink: 0;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 5px 10px;
-            color: var(--gray);
-            font-size: 0.7rem;
-            transition: var(--transition);
-            min-width: 60px;
-            position: relative;
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-        }
-
-        .nav-badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform: translate(25%, -25%);
-        }
-
-        /* Card Styles */
         .card {
             background: white;
             border-radius: 15px;
@@ -216,7 +151,6 @@
             background: var(--accent);
         }
 
-        /* Form Elements */
         .form-group {
             margin-bottom: 15px;
             width: 100%;
@@ -265,7 +199,6 @@
             box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
         }
 
-        /* Buttons */
         .buttons {
             display: flex;
             gap: 12px;
@@ -349,13 +282,11 @@
             transform: scale(1.05);
         }
 
-        /* Prediction List */
         .predictions-list {
             max-height: 300px;
             overflow-y: auto;
             padding-right: 8px;
             width: 100%;
-            -webkit-overflow-scrolling: touch;
         }
 
         .prediction-item {
@@ -400,7 +331,6 @@
             font-size: 1.1rem;
         }
 
-        /* Chart Container */
         .chart-container {
             background-color: white;
             padding: 20px;
@@ -422,7 +352,15 @@
             background: var(--gradient);
         }
 
-        /* Stats Grid */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: var(--gradient);
+            margin-top: 15px;
+            border-radius: 0 0 20px 20px;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -471,7 +409,6 @@
             font-size: 0.9rem;
         }
 
-        /* Number Grid */
         .number-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -483,7 +420,6 @@
             border: 2px solid #e1e5eb;
             border-radius: 10px;
             width: 100%;
-            -webkit-overflow-scrolling: touch;
         }
 
         .number-item {
@@ -513,71 +449,55 @@
             transform: scale(1.05);
         }
 
-        /* Selected Numbers - Redesigned */
-        .selected-numbers-container {
-            margin-top: 12px;
+        .history-section {
+            margin-top: 20px;
             width: 100%;
+        }
+
+        .history-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
         }
 
         .selected-numbers {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            margin-top: 12px;
             min-height: 45px;
-            padding: 12px;
+            padding: 8px;
             border: 2px dashed #e1e5eb;
             border-radius: 10px;
             width: 100%;
-            background-color: #f9fafb;
         }
 
         .selected-number {
             background: var(--gradient);
             color: white;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             font-weight: 600;
-            font-size: 0.95rem;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-            animation: popIn 0.3s ease;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            font-size: 0.9rem;
         }
 
         .remove-number {
             background: rgba(255, 255, 255, 0.3);
             border: none;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
+            font-size: 11px;
         }
 
-        .remove-number:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: scale(1.1);
-        }
-
-        .empty-selection {
-            color: #95a5a6;
-            text-align: center;
-            width: 100%;
-            font-style: italic;
-            padding: 5px 0;
-        }
-
-        /* Person Numbers */
         .person-numbers {
             display: flex;
             flex-wrap: wrap;
@@ -593,7 +513,6 @@
             font-size: 0.8rem;
         }
         
-        /* Date Filter */
         .date-filter {
             display: flex;
             gap: 8px;
@@ -607,7 +526,6 @@
             min-width: auto;
         }
         
-        /* Chart Toggles */
         .chart-toggles {
             display: flex;
             gap: 10px;
@@ -630,7 +548,6 @@
             color: white;
         }
         
-        /* Member Item */
         .member-item {
             display: flex;
             justify-content: space-between;
@@ -648,40 +565,30 @@
             gap: 8px;
         }
         
-        /* Export Section */
         .export-section {
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px solid #eee;
         }
         
-        /* Number Frequency Grid */
         .number-frequency-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
             margin-top: 15px;
         }
         
         .frequency-item {
-            background: white;
+            background: #f8f9fa;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s;
-        }
-        
-        .frequency-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .frequency-number {
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: var(--primary);
-            margin-bottom: 5px;
         }
         
         .frequency-count {
@@ -689,83 +596,64 @@
             color: var(--gray);
         }
         
-        .frequency-bar {
-            height: 4px;
-            background-color: #e9ecef;
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        
-        .frequency-fill {
-            height: 100%;
-            background: var(--gradient);
-            border-radius: 2px;
+        .frequency-numbers {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: var(--dark);
+            word-break: break-all;
         }
 
-        /* Percentage Display */
-        .percentage-display {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-top: 5px;
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 30px;
-            color: var(--gray);
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            display: block;
-            color: #e1e5eb;
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: var(--shadow);
-            max-height: 80vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .close {
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .edit-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .left-panel, .right-panel {
+                width: 100%;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.7rem;
+            }
+            
+            .number-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .history-buttons {
+                flex-direction: column;
+            }
+            
+            .date-filter {
+                justify-content: center;
+            }
+            
+            .date-filter button {
+                flex: 1;
+                min-width: 70px;
+            }
+            
+            button {
+                min-width: 100%;
+            }
+            
+            .number-frequency-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         /* Custom scrollbar */
@@ -807,87 +695,137 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 10px;
-                padding-bottom: 70px;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-            
-            h2 {
-                font-size: 1.1rem;
-            }
-            
-            .buttons {
-                flex-direction: column;
-            }
-            
-            .app-header h1 {
-                font-size: 1.2rem;
-            }
-            
-            .stat-card {
-                padding: 12px;
-            }
-            
-            .stat-value {
-                font-size: 1.7rem;
-            }
-            
-            .number-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .date-filter {
-                justify-content: center;
-            }
-            
-            .date-filter button {
-                flex: 1;
-                min-width: 70px;
-            }
-            
-            button {
-                min-width: 100%;
-            }
-            
-            .number-frequency-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .nav-item {
-                font-size: 0.65rem;
-                min-width: 50px;
-            }
-            
-            .nav-icon {
-                font-size: 1.1rem;
-            }
-            
-            .selected-number {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
+        
+        .percentage-display {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #e1e5eb;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--shadow);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .close {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Custom alert styles */
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .custom-alert.error {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .custom-alert.success {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .custom-alert i {
+            font-size: 1.2rem;
+        }
+        
+        .custom-alert.error i {
+            color: #e74c3c;
+        }
+        
+        .custom-alert.success i {
+            color: #2ecc71;
+        }
+        
+        .custom-alert-content {
+            flex: 1;
+        }
+        
+        .custom-alert-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .custom-alert-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <!-- App Header -->
-    <header class="app-header">
-        <h1>ලොතරැයි අංක අනුමාන කිරීමේ පද්ධතිය</h1>
-        <div class="date-display" id="current-date">දිනය: ගණනය කිරීම...</div>
-    </header>
+    <div class="container">
+        <header>
+            <h1>ලොතරැයි අංක අනුමාන කිරීමේ පද්ධතිය</h1>
+            <div class="date-display" id="current-date">දිනය: ගණනය කිරීම...</div>
+        </header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Home Tab -->
-            <div class="tab-content active" id="home-tab">
+        <div class="main-content">
+            <div class="left-panel">
                 <div class="card">
                     <h2>අනුමානය ඇතුළත් කරන්න</h2>
                     
@@ -915,10 +853,8 @@
                     
                     <div class="form-group">
                         <label><i class="fas fa-check-circle"></i> තෝරාගත් අංක:</label>
-                        <div class="selected-numbers-container">
-                            <div class="selected-numbers" id="selected-numbers">
-                                <div class="empty-selection">තෝරාගත් අංක නොමැත</div>
-                            </div>
+                        <div class="selected-numbers" id="selected-numbers">
+                            <p style="color: #95a5a6; text-align: center; width: 100%;">තෝරාගත් අංක නොමැත</p>
                         </div>
                     </div>
                     
@@ -932,19 +868,6 @@
                     </div>
                 </div>
                 
-                <div class="card">
-                    <h2>සාමාජිකයින්</h2>
-                    <div id="members-list">
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <p>සාමාජිකයින් නොමැත</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- History Tab -->
-            <div class="tab-content" id="history-tab">
                 <div class="card">
                     <h2>
                         <span>අනුමාන ලැයිස්තුව</span>
@@ -969,9 +892,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Charts Tab -->
-            <div class="tab-content" id="charts-tab">
+            
+            <div class="right-panel">
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">මුළු අනුමාන</div>
@@ -1006,13 +928,19 @@
                         <div id="percentage-display" class="percentage-display" style="display: none;"></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Statistics Tab -->
-            <div class="tab-content" id="stats-tab">
+                
+                <div class="card">
+                    <h2>සාමාජිකයින්</h2>
+                    <div id="members-list">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>සාමාජිකයින් නොමැත</p>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="card">
                     <h2>අංක සංඛ්‍යාලේඛන</h2>
-                    <p>සියලුම අංකවල අනුමාන සංඛ්‍යාව</p>
                     <div class="number-frequency-grid" id="number-frequency-grid">
                         <!-- Number frequency will be populated by JavaScript -->
                     </div>
@@ -1029,27 +957,11 @@
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" data-tab="home-tab">
-            <div class="nav-icon"><i class="fas fa-home"></i></div>
-            <span>මුල් පිටුව</span>
-        </div>
-        <div class="nav-item" data-tab="history-tab">
-            <div class="nav-icon"><i class="fas fa-history"></i></div>
-            <span>ඉතිහාසය</span>
-        </div>
-        <div class="nav-item" data-tab="charts-tab">
-            <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
-            <span>ප්‍රස්තාර</span>
-        </div>
-        <div class="nav-item" data-tab="stats-tab">
-            <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
-            <span>සංඛ්‍යාලේඛන</span>
-        </div>
-    </nav>
+        
+        <footer>
+            <p>© 2025 ලොතරැයි අංක අනුමාන කිරීමේ පද්ධතිය</p>
+        </footer>
+    </div>
 
     <!-- Edit Modal -->
     <div class="modal" id="edit-modal">
@@ -1066,15 +978,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Prevent zooming and text selection
-            document.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-            });
-            
-            document.addEventListener('selectstart', function(e) {
-                e.preventDefault();
-            });
-            
             // Set current date
             const now = new Date();
             const formattedDate = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
@@ -1097,27 +1000,40 @@
             // Load predictions from localStorage
             let predictions = JSON.parse(localStorage.getItem('lotteryPredictions')) || [];
             
-            // Tab navigation functionality
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    // Remove active class from all items
-                    document.querySelectorAll('.nav-item').forEach(navItem => {
-                        navItem.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked item
-                    this.classList.add('active');
-                    
-                    // Hide all tab content
-                    document.querySelectorAll('.tab-content').forEach(tab => {
-                        tab.classList.remove('active');
-                    });
-                    
-                    // Show selected tab content
-                    const tabId = this.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
+            // Custom alert function
+            function showCustomAlert(type, title, message) {
+                // Remove any existing alerts
+                const existingAlerts = document.querySelectorAll('.custom-alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `custom-alert ${type}`;
+                
+                const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+                
+                alertDiv.innerHTML = `
+                    <i class="fas ${icon}"></i>
+                    <div class="custom-alert-content">
+                        <div class="custom-alert-title">${title}</div>
+                        <div>${message}</div>
+                    </div>
+                    <button class="custom-alert-close">&times;</button>
+                `;
+                
+                document.body.appendChild(alertDiv);
+                
+                // Add event listener to close button
+                alertDiv.querySelector('.custom-alert-close').addEventListener('click', function() {
+                    alertDiv.remove();
                 });
-            });
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
             
             // Populate person name dropdown
             const personNameSelect = document.getElementById('person-name');
@@ -1183,16 +1099,16 @@
                     .map(input => input.value);
                 
                 if (selectedNumbers.length === 0) {
-                    selectedNumbersContainer.innerHTML = '<div class="empty-selection">තෝරාගත් අංක නොමැත</div>';
+                    selectedNumbersContainer.innerHTML = '<p style="color: #95a5a6; text-align: center; width: 100%;">තෝරාගත් අංක නොමැත</p>';
                     return;
                 }
                 
-                selectedNumbers.forEach(num => {
+                selectedNumbers.forEach(number => {
                     const numberElement = document.createElement('div');
                     numberElement.className = 'selected-number';
                     numberElement.innerHTML = `
-                        ${num}
-                        <button type="button" class="remove-number" data-number="${num}">×</button>
+                        ${number}
+                        <button class="remove-number" data-number="${number}">×</button>
                     `;
                     selectedNumbersContainer.appendChild(numberElement);
                 });
@@ -1200,99 +1116,543 @@
                 // Add event listeners to remove buttons
                 document.querySelectorAll('.remove-number').forEach(button => {
                     button.addEventListener('click', function() {
-                        const numberToRemove = this.getAttribute('data-number');
-                        const checkbox = document.getElementById(`grid-${numberToRemove}`);
-                        checkbox.checked = false;
-                        updateSelectedNumbers();
+                        const number = this.getAttribute('data-number');
+                        const checkbox = document.getElementById(`grid-${number}`);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            updateSelectedNumbers();
+                        }
                     });
                 });
             }
             
-            // Add prediction functionality
+            // Add prediction
             document.getElementById('add-prediction').addEventListener('click', function() {
+                let name = personNameSelect.value;
                 const selectedNumbers = Array.from(document.querySelectorAll('input[name="grid-number"]:checked'))
                     .map(input => input.value);
                 
-                if (selectedNumbers.length === 0) {
-                    alert('කරුණාකර අවම වශයෙන් එක් අංකයක්වත් තෝරන්න!');
+                if (name === 'other') {
+                    name = document.getElementById('custom-name').value.trim();
+                    
+                    // Add new member if not already in list
+                    if (name && !members.includes(name)) {
+                        members.push(name);
+                        localStorage.setItem('lotteryMembers', JSON.stringify(members));
+                        updatePersonDropdown();
+                        updateMembersList();
+                    }
+                }
+                
+                if (!name) {
+                    showCustomAlert('error', 'දෝෂයක්', 'කරුණාකර පුද්ගලයාගේ නම ඇතුළත් කරන්න!');
                     return;
                 }
                 
-                let personName;
-                if (personNameSelect.value === 'other') {
-                    personName = document.getElementById('custom-name').value.trim();
-                    if (!personName) {
-                        alert('කරුණාකර පුද්ගලයාගේ නම ඇතුළත් කරන්න!');
-                        return;
-                    }
-                    
-                    // Add new member if not already in the list
-                    if (!members.includes(personName)) {
-                        members.push(personName);
-                        localStorage.setItem('lotteryMembers', JSON.stringify(members));
-                        updatePersonDropdown();
-                    }
-                } else {
-                    personName = personNameSelect.value;
+                if (selectedNumbers.length === 0) {
+                    showCustomAlert('error', 'දෝෂයක්', 'කරුණාකර අඩුම තරමින් එක් ලොතරැයි අංකයක්වත් තෝරන්න!');
+                    return;
                 }
                 
-                // Create prediction object
-                const prediction = {
-                    id: Date.now(),
-                    person: personName,
-                    numbers: selectedNumbers,
-                    date: new Date().toISOString()
-                };
+                // Check for duplicate numbers for the same person
+                const existingPredictionsForPerson = predictions.filter(p => p.name === name);
+                const duplicateNumbers = [];
+                
+                selectedNumbers.forEach(number => {
+                    const isDuplicate = existingPredictionsForPerson.some(p => p.number === number);
+                    if (isDuplicate) {
+                        duplicateNumbers.push(number);
+                    }
+                });
+                
+                if (duplicateNumbers.length > 0) {
+                    showCustomAlert('error', 'දෝෂයක්', `${name} සඳහා ${duplicateNumbers.join(', ')} අංක දැනටමත් ඇතුළත් කර ඇත!`);
+                    return;
+                }
                 
                 // Add to predictions array
-                predictions.push(prediction);
+                selectedNumbers.forEach(number => {
+                    predictions.push({ 
+                        id: Date.now() + Math.random(), // Unique ID for each prediction
+                        name, 
+                        number,
+                        date: new Date().toLocaleString('si-LK'),
+                        timestamp: new Date().getTime()
+                    });
+                });
+                
+                // Save to localStorage
                 localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
                 
+                // Update UI
+                updatePredictionsList();
+                updateChart();
+                updateStats();
+                updateMembersList();
+                updateNumberFrequency();
+                
                 // Clear form
-                document.querySelectorAll('input[name="grid-number"]:checked').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
                 personNameSelect.value = '';
                 document.getElementById('custom-name').value = '';
                 customNameContainer.style.display = 'none';
+                document.querySelectorAll('input[name="grid-number"]').forEach(input => {
+                    input.checked = false;
+                });
                 updateSelectedNumbers();
-                
-                // Update UI
-                updateMembersList();
-                updatePredictionsList();
-                updateStats();
-                updateCharts();
-                updateNumberFrequencyGrid();
                 
                 // Show success animation
-                const button = document.getElementById('add-prediction');
-                button.innerHTML = '<i class="fas fa-check"></i> සාර්ථකයි!';
-                button.style.backgroundColor = '#2ecc71';
+                animateSuccess();
                 
-                setTimeout(() => {
-                    button.innerHTML = '<i class="fas fa-plus"></i> අනුමානය එක් කරන්න';
-                    button.style.backgroundColor = '';
-                }, 2000);
+                showCustomAlert('success', 'සාර්ථකයි', 'අනුමානය සාර්ථකව ඇතුළත් කරන ලදී');
             });
             
-            // Clear form functionality
+            // Clear form
             document.getElementById('clear-form').addEventListener('click', function() {
-                document.querySelectorAll('input[name="grid-number"]:checked').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
                 personNameSelect.value = '';
                 document.getElementById('custom-name').value = '';
                 customNameContainer.style.display = 'none';
+                document.querySelectorAll('input[name="grid-number"]').forEach(input => {
+                    input.checked = false;
+                });
                 updateSelectedNumbers();
             });
+            
+            // Clear history
+            document.getElementById('clear-history').addEventListener('click', function() {
+                if (confirm('ඔබට ඇත්තටම සියලුම ඉතිහාසය මකා දැමීමට අවශ්‍යද?')) {
+                    predictions = [];
+                    localStorage.removeItem('lotteryPredictions');
+                    updatePredictionsList();
+                    updateChart();
+                    updateStats();
+                    updateMembersList();
+                    updateNumberFrequency();
+                    
+                    // Show clear animation
+                    animateClear();
+                    
+                    showCustomAlert('success', 'සාර්ථකයි', 'ඉතිහාසය සාර්ථකව මකා දමන ලදී');
+                }
+            });
+            
+            // Date filter functionality
+            document.querySelectorAll('#date-filter button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('#date-filter button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const days = this.getAttribute('data-days');
+                    filterPredictionsByDate(days);
+                });
+            });
+            
+            function filterPredictionsByDate(days) {
+                const now = new Date();
+                let filteredPredictions = [];
+                
+                if (days === 'all') {
+                    filteredPredictions = predictions;
+                } else {
+                    const daysAgo = parseInt(days);
+                    const cutoffDate = new Date(now);
+                    cutoffDate.setDate(now.getDate() - daysAgo);
+                    
+                    filteredPredictions = predictions.filter(pred => {
+                        const predDate = new Date(pred.timestamp);
+                        return predDate >= cutoffDate;
+                    });
+                }
+                
+                updatePredictionsList(filteredPredictions);
+            }
+            
+            // Chart toggles functionality
+            document.querySelectorAll('.chart-toggle').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.chart-toggle').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const chartType = this.getAttribute('data-chart');
+                    updateChart(chartType);
+                });
+            });
+            
+            // Export data functionality
+            document.getElementById('export-data').addEventListener('click', function() {
+                exportToExcel();
+            });
+            
+            function exportToExcel() {
+                // Prepare data for export
+                const data = predictions.map(pred => ({
+                    'නම': pred.name,
+                    'අංකය': pred.number,
+                    'දිනය': pred.date
+                }));
+                
+                // Create worksheet
+                const ws = XLSX.utils.json_to_sheet(data);
+                
+                // Create workbook
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'ලොතරැයි අනුමාන');
+                
+                // Export to Excel
+                XLSX.writeFile(wb, 'ලොතරැයි_අනුමාන_' + new Date().toISOString().slice(0, 10) + '.xlsx');
+                
+                showCustomAlert('success', 'සාර්ථකයි', 'දත්ත බාගත කිරීම සාර්ථකයි');
+            }
+            
+            // Modal functionality
+            const modal = document.getElementById('edit-modal');
+            const closeModal = document.querySelector('.close');
+            
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Edit prediction functionality
+            function setupPredictionEditButtons() {
+                document.querySelectorAll('.edit-prediction').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const prediction = predictions.find(p => p.id == id);
+                        
+                        if (!prediction) return;
+                        
+                        // Check if member is default (cannot be edited)
+                        const isDefaultMember = defaultMembers.includes(prediction.name);
+                        
+                        // Get all predictions for this person
+                        const personPredictions = predictions.filter(p => p.name === prediction.name);
+                        
+                        // Populate edit form
+                        const editForm = document.getElementById('edit-form');
+                        editForm.innerHTML = `
+                            <div class="form-group">
+                                <label for="edit-name">නම:</label>
+                                <input type="text" id="edit-name" value="${prediction.name}" ${isDefaultMember ? 'readonly' : ''}>
+                            </div>
+                            <div class="form-group">
+                                <label>අංක තෝරන්න (බහු තේරීම):</label>
+                                <div class="number-grid" id="edit-number-grid">
+                                    ${lotteryNumbers.map(num => {
+                                        const isChecked = personPredictions.some(p => p.number === num);
+                                        return `
+                                            <div class="number-item">
+                                                <input type="checkbox" name="edit-grid-number" id="edit-grid-${num}" value="${num}" ${isChecked ? 'checked' : ''}>
+                                                <label for="edit-grid-${num}">${num}</label>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>තෝරාගත් අංක:</label>
+                                <div class="selected-numbers" id="edit-selected-numbers">
+                                    ${personPredictions.map(p => `
+                                        <div class="selected-number">
+                                            ${p.number}
+                                            <button type="button" class="remove-number" data-number="${p.number}">×</button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="buttons">
+                                <button type="button" class="btn-add" id="save-edit" data-id="${prediction.id}">
+                                    <i class="fas fa-save"></i> සුරකින්න
+                                </button>
+                                <button type="button" class="btn-clear" id="cancel-edit">
+                                    <i class="fas fa-times"></i> අවලංගු කරන්න
+                                </button>
+                            </div>
+                        `;
+                        
+                        // Show modal
+                        modal.style.display = 'flex';
+                        
+                        // Add event listeners to checkboxes
+                        document.querySelectorAll('#edit-number-grid input').forEach(checkbox => {
+                            checkbox.addEventListener('change', function() {
+                                updateEditSelectedNumbers();
+                            });
+                        });
+                        
+                        // Add event listeners to remove buttons
+                        document.querySelectorAll('#edit-selected-numbers .remove-number').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const number = this.getAttribute('data-number');
+                                const checkbox = document.getElementById(`edit-grid-${number}`);
+                                if (checkbox) {
+                                    checkbox.checked = false;
+                                    updateEditSelectedNumbers();
+                                }
+                            });
+                        });
+                        
+                        // Update selected numbers display
+                        function updateEditSelectedNumbers() {
+                            const selectedNumbersContainer = document.getElementById('edit-selected-numbers');
+                            selectedNumbersContainer.innerHTML = '';
+                            
+                            const selectedNumbers = Array.from(document.querySelectorAll('#edit-number-grid input:checked'))
+                                .map(input => input.value);
+                            
+                            if (selectedNumbers.length === 0) {
+                                selectedNumbersContainer.innerHTML = '<p style="color: #95a5a6; text-align: center; width: 100%;">තෝරාගත් අංක නොමැත</p>';
+                                return;
+                            }
+                            
+                            selectedNumbers.forEach(number => {
+                                const numberElement = document.createElement('div');
+                                numberElement.className = 'selected-number';
+                                numberElement.innerHTML = `
+                                    ${number}
+                                    <button class="remove-number" data-number="${number}">×</button>
+                                `;
+                                selectedNumbersContainer.appendChild(numberElement);
+                            });
+                            
+                            // Add event listeners to remove buttons
+                            document.querySelectorAll('#edit-selected-numbers .remove-number').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const number = this.getAttribute('data-number');
+                                    const checkbox = document.getElementById(`edit-grid-${number}`);
+                                    if (checkbox) {
+                                        checkbox.checked = false;
+                                        updateEditSelectedNumbers();
+                                    }
+                                });
+                            });
+                        }
+                        
+                        // Setup save button
+                        document.getElementById('save-edit').addEventListener('click', function() {
+                            const newName = document.getElementById('edit-name').value.trim();
+                            const selectedNumbers = Array.from(document.querySelectorAll('#edit-number-grid input:checked'))
+                                .map(input => input.value);
+                            
+                            if (!newName) {
+                                showCustomAlert('error', 'දෝෂයක්', 'කරුණාකර නම ඇතුළත් කරන්න!');
+                                return;
+                            }
+                            
+                            if (selectedNumbers.length === 0) {
+                                showCustomAlert('error', 'දෝෂයක්', 'කරුණාකර අඩුම තරමින් එක් අංකයක්වත් තෝරන්න!');
+                                return;
+                            }
+                            
+                            // Remove all predictions for this person
+                            predictions = predictions.filter(p => p.name !== prediction.name);
+                            
+                            // Add new predictions with selected numbers
+                            selectedNumbers.forEach(number => {
+                                predictions.push({ 
+                                    id: Date.now() + Math.random(),
+                                    name: newName, 
+                                    number,
+                                    date: new Date().toLocaleString('si-LK'),
+                                    timestamp: new Date().getTime()
+                                });
+                            });
+                            
+                            // Save to localStorage
+                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                            
+                            // Update UI
+                            updatePredictionsList();
+                            updateChart();
+                            updateStats();
+                            updateMembersList();
+                            updateNumberFrequency();
+                            
+                            // Close modal
+                            modal.style.display = 'none';
+                            
+                            showCustomAlert('success', 'සාර්ථකයි', 'අනුමානය සාර්ථකව යාවත්කාලීන කරන ලදී');
+                        });
+                        
+                        // Setup cancel button
+                        document.getElementById('cancel-edit').addEventListener('click', function() {
+                            modal.style.display = 'none';
+                        });
+                    });
+                });
+            }
+            
+            // Delete member functionality
+            function setupMemberDeleteButtons() {
+                document.querySelectorAll('.delete-member').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const memberName = this.getAttribute('data-member');
+                        
+                        // Check if member is default (cannot be deleted)
+                        if (defaultMembers.includes(memberName)) {
+                            showCustomAlert('error', 'දෝෂයක්', 'ස්ථිර සාමාජිකයින් මකා දැමිය නොහැක!');
+                            return;
+                        }
+                        
+                        if (confirm(`ඔබට ඇත්තටම "${memberName}" මකා දැමීමට අවශ්‍යද? ඔහු/ඇයගේ සියලු අනුමාන ද මකා දැමෙනු ඇත.`)) {
+                            // Remove member from members list
+                            members = members.filter(m => m !== memberName);
+                            localStorage.setItem('lotteryMembers', JSON.stringify(members));
+                            
+                            // Remove all predictions by this member
+                            predictions = predictions.filter(p => p.name !== memberName);
+                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                            
+                            // Update UI
+                            updatePersonDropdown();
+                            updatePredictionsList();
+                            updateChart();
+                            updateStats();
+                            updateMembersList();
+                            updateNumberFrequency();
+                            
+                            showCustomAlert('success', 'සාර්ථකයි', 'සාමාජිකයා සාර්ථකව මකා දමන ලදී');
+                        }
+                    });
+                });
+            }
+            
+            // Delete prediction functionality
+            function setupPredictionDeleteButtons() {
+                document.querySelectorAll('.delete-prediction').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        if (confirm('ඔබට ඇත්තටම මෙම අනුමානය මකා දැමීමට අවශ්‍යද?')) {
+                            predictions = predictions.filter(p => p.id != id);
+                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
+                            updatePredictionsList();
+                            updateChart();
+                            updateStats();
+                            updateMembersList();
+                            updateNumberFrequency();
+                            
+                            showCustomAlert('success', 'සාර්ථකයි', 'අනුමානය සාර්ථකව මකා දමන ලදී');
+                        }
+                    });
+                });
+            }
+            
+            // Success animation
+            function animateSuccess() {
+                const button = document.getElementById('add-prediction');
+                button.classList.add('pulse');
+                setTimeout(() => {
+                    button.classList.remove('pulse');
+                }, 2000);
+                
+                // Animate stats
+                document.querySelectorAll('.stat-value').forEach(stat => {
+                    anime({
+                        targets: stat,
+                        scale: [1, 1.2, 1],
+                        duration: 1000,
+                        easing: 'easeInOutQuad'
+                    });
+                });
+            }
+            
+            // Clear animation
+            function animateClear() {
+                const button = document.getElementById('clear-history');
+                anime({
+                    targets: button,
+                    translateX: [0, -10, 10, -10, 0],
+                    duration: 500,
+                    easing: 'easeInOutQuad'
+                });
+            }
+            
+            // Update predictions list
+            function updatePredictionsList(preds = predictions) {
+                const container = document.getElementById('predictions-container');
+                
+                // Clear previous predictions
+                container.innerHTML = '';
+                
+                if (preds.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>අනුමාන නොමැත</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Group predictions by person
+                const predictionsByPerson = {};
+                preds.forEach((pred) => {
+                    if (!predictionsByPerson[pred.name]) {
+                        predictionsByPerson[pred.name] = {
+                            numbers: new Set(),
+                            predictions: []
+                        };
+                    }
+                    predictionsByPerson[pred.name].numbers.add(pred.number);
+                    predictionsByPerson[pred.name].predictions.push(pred);
+                });
+                
+                // Add each person's predictions
+                Object.keys(predictionsByPerson).forEach(name => {
+                    const personData = predictionsByPerson[name];
+                    const numbers = Array.from(personData.numbers);
+                    
+                    const predictionElement = document.createElement('div');
+                    predictionElement.className = 'prediction-item';
+                    
+                    predictionElement.innerHTML = `
+                        <div class="prediction-info">
+                            <div class="prediction-name">${name}</div>
+                            <div class="person-numbers">
+                                ${numbers.map(num => `<span class="person-number">${num}</span>`).join('')}
+                            </div>
+                            <div style="font-size: 0.8rem; color: #95a5a6; margin-top: 5px;">
+                                ${personData.predictions[0].date}
+                            </div>
+                        </div>
+                        <div class="member-actions">
+                            <button class="btn-edit edit-prediction" data-id="${personData.predictions[0].id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete delete-prediction" data-id="${personData.predictions[0].id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(predictionElement);
+                });
+                
+                // Setup edit and delete buttons
+                setupPredictionEditButtons();
+                setupPredictionDeleteButtons();
+            }
             
             // Update members list
             function updateMembersList() {
-                const membersList = document.getElementById('members-list');
-                membersList.innerHTML = '';
+                const container = document.getElementById('members-list');
+                container.innerHTML = '';
                 
                 if (members.length === 0) {
-                    membersList.innerHTML = `
+                    container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-users"></i>
                             <p>සාමාජිකයින් නොමැත</p>
@@ -1302,643 +1662,301 @@
                 }
                 
                 members.forEach(member => {
-                    const memberPredictions = predictions.filter(p => p.person === member);
+                    const memberElement = document.createElement('div');
+                    memberElement.className = 'member-item';
                     
-                    const memberItem = document.createElement('div');
-                    memberItem.className = 'member-item';
+                    // Get predictions for this member
+                    const memberPredictions = predictions.filter(p => p.name === member);
+                    const numbers = [...new Set(memberPredictions.map(p => p.number))];
                     
-                    const memberInfo = document.createElement('div');
-                    memberInfo.className = 'member-info';
+                    // Check if member is default (cannot be deleted)
+                    const isDefaultMember = defaultMembers.includes(member);
                     
-                    const memberName = document.createElement('div');
-                    memberName.className = 'member-name';
-                    memberName.textContent = member;
-                    
-                    const personNumbers = document.createElement('div');
-                    personNumbers.className = 'person-numbers';
-                    
-                    // Get unique numbers for this member
-                    const uniqueNumbers = [...new Set(memberPredictions.flatMap(p => p.numbers))];
-                    
-                    uniqueNumbers.slice(0, 5).forEach(num => {
-                        const numberSpan = document.createElement('span');
-                        numberSpan.className = 'person-number';
-                        numberSpan.textContent = num;
-                        personNumbers.appendChild(numberSpan);
-                    });
-                    
-                    if (uniqueNumbers.length > 5) {
-                        const moreSpan = document.createElement('span');
-                        moreSpan.className = 'person-number';
-                        moreSpan.textContent = `+${uniqueNumbers.length - 5}`;
-                        personNumbers.appendChild(moreSpan);
+                    memberElement.innerHTML = `
+                        <div class="member-info">
+                            <div class="member-name">${member}</div>
+                            <div class="person-numbers">
+                                ${numbers.map(num => `<span class="person-number">${num}</span>`).join('')}
+                            </div>
+                            <div style="font-size: 0.8rem; color: #95a5a6; margin-top: 5px;">
+                                අනුමාන: ${memberPredictions.length}
+                            </div>
+                        </div>
+                        <div class="member-actions">
+                            ${!isDefaultMember ? `
+                                <button class="btn-delete delete-member" data-member="${member}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    container.appendChild(memberElement);
+                });
+                
+                // Setup delete buttons
+                setupMemberDeleteButtons();
+            }
+            
+            // Update number frequency grid
+            function updateNumberFrequency() {
+                const container = document.getElementById('number-frequency-grid');
+                container.innerHTML = '';
+                
+                // Count frequency of each number
+                const numberCounts = {};
+                const numberExamples = {};
+                
+                predictions.forEach(pred => {
+                    if (!numberCounts[pred.number]) {
+                        numberCounts[pred.number] = 0;
+                        numberExamples[pred.number] = new Set();
                     }
+                    numberCounts[pred.number]++;
+                    numberExamples[pred.number].add(pred.number);
+                });
+                
+                // Create frequency grid for numbers 0-9
+                for (let i = 0; i <= 9; i++) {
+                    const frequencyItem = document.createElement('div');
+                    frequencyItem.className = 'frequency-item';
                     
-                    memberInfo.appendChild(memberName);
-                    memberInfo.appendChild(personNumbers);
+                    // Find numbers ending with this digit
+                    const numbersEndingWith = Object.keys(numberCounts).filter(num => num.endsWith(i.toString()));
+                    let totalCount = 0;
+                    let examples = [];
                     
-                    const memberActions = document.createElement('div');
-                    memberActions.className = 'member-actions';
-                    
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'btn-delete';
-                    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-                    deleteButton.addEventListener('click', function() {
-                        if (confirm(`ඔබට ${member} මකා දැමීමට අවශ්‍යද?`)) {
-                            // Remove member
-                            members = members.filter(m => m !== member);
-                            localStorage.setItem('lotteryMembers', JSON.stringify(members));
-                            
-                            // Remove predictions for this member
-                            predictions = predictions.filter(p => p.person !== member);
-                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
-                            
-                            // Update UI
-                            updatePersonDropdown();
-                            updateMembersList();
-                            updatePredictionsList();
-                            updateStats();
-                            updateCharts();
-                            updateNumberFrequencyGrid();
-                        }
+                    numbersEndingWith.forEach(num => {
+                        totalCount += numberCounts[num];
+                        examples.push(num);
                     });
                     
-                    memberActions.appendChild(deleteButton);
+                    examples.sort();
                     
-                    memberItem.appendChild(memberInfo);
-                    memberItem.appendChild(memberActions);
-                    
-                    membersList.appendChild(memberItem);
-                });
-            }
-            
-            // Update predictions list
-            function updatePredictionsList() {
-                const predictionsContainer = document.getElementById('predictions-container');
-                predictionsContainer.innerHTML = '';
-                
-                if (predictions.length === 0) {
-                    predictionsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-list"></i>
-                            <p>අනුමාන නොමැත</p>
-                        </div>
+                    frequencyItem.innerHTML = `
+                        <div class="frequency-number">${i}</div>
+                        <div class="frequency-count">අනුමාන: ${totalCount}</div>
+                        <div class="frequency-numbers">${examples.join(', ') || 'අංක නැත'}</div>
                     `;
-                    return;
+                    
+                    container.appendChild(frequencyItem);
                 }
-                
-                // Filter predictions based on date filter
-                const activeFilter = document.querySelector('.date-filter button.active');
-                const daysFilter = activeFilter ? activeFilter.getAttribute('data-days') : 'all';
-                
-                let filteredPredictions = [...predictions];
-                
-                if (daysFilter !== 'all') {
-                    const days = parseInt(daysFilter);
-                    const cutoffDate = new Date();
-                    cutoffDate.setDate(cutoffDate.getDate() - days);
-                    
-                    filteredPredictions = predictions.filter(p => {
-                        const predictionDate = new Date(p.date);
-                        return predictionDate >= cutoffDate;
-                    });
-                }
-                
-                if (filteredPredictions.length === 0) {
-                    predictionsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-list"></i>
-                            <p>තෝරාගත් කාල පරාසය සඳහා අනුමාන නොමැත</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Sort by date (newest first)
-                filteredPredictions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                filteredPredictions.forEach(prediction => {
-                    const predictionDate = new Date(prediction.date);
-                    const formattedDate = `${predictionDate.getFullYear()}/${(predictionDate.getMonth() + 1).toString().padStart(2, '0')}/${predictionDate.getDate().toString().padStart(2, '0')}`;
-                    const formattedTime = `${predictionDate.getHours().toString().padStart(2, '0')}:${predictionDate.getMinutes().toString().padStart(2, '0')}`;
-                    
-                    const predictionItem = document.createElement('div');
-                    predictionItem.className = 'prediction-item';
-                    predictionItem.setAttribute('data-id', prediction.id);
-                    
-                    const predictionInfo = document.createElement('div');
-                    predictionInfo.className = 'prediction-info';
-                    
-                    const predictionName = document.createElement('div');
-                    predictionName.className = 'prediction-name';
-                    predictionName.textContent = prediction.person;
-                    
-                    const predictionNumber = document.createElement('div');
-                    predictionNumber.className = 'prediction-number';
-                    predictionNumber.textContent = prediction.numbers.join(', ');
-                    
-                    const predictionMeta = document.createElement('div');
-                    predictionMeta.className = 'prediction-meta';
-                    predictionMeta.innerHTML = `<small>${formattedDate} ${formattedTime}</small>`;
-                    
-                    predictionInfo.appendChild(predictionName);
-                    predictionInfo.appendChild(predictionNumber);
-                    predictionInfo.appendChild(predictionMeta);
-                    
-                    const predictionActions = document.createElement('div');
-                    predictionActions.className = 'prediction-actions';
-                    
-                    const editButton = document.createElement('button');
-                    editButton.className = 'btn-edit';
-                    editButton.innerHTML = '<i class="fas fa-edit"></i>';
-                    editButton.addEventListener('click', function() {
-                        openEditModal(prediction);
-                    });
-                    
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'btn-delete';
-                    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-                    deleteButton.addEventListener('click', function() {
-                        if (confirm('ඔබට මෙම අනුමානය මකා දැමීමට අවශ්‍යද?')) {
-                            predictions = predictions.filter(p => p.id !== prediction.id);
-                            localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
-                            updatePredictionsList();
-                            updateStats();
-                            updateCharts();
-                            updateNumberFrequencyGrid();
-                        }
-                    });
-                    
-                    predictionActions.appendChild(editButton);
-                    predictionActions.appendChild(deleteButton);
-                    
-                    predictionItem.appendChild(predictionInfo);
-                    predictionItem.appendChild(predictionActions);
-                    
-                    predictionsContainer.appendChild(predictionItem);
-                });
             }
-            
-            // Date filter functionality
-            document.querySelectorAll('.date-filter button').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.querySelectorAll('.date-filter button').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    updatePredictionsList();
-                });
-            });
-            
-            // Clear history functionality
-            document.getElementById('clear-history').addEventListener('click', function() {
-                if (confirm('ඔබට සියලුම අනුමාන ඉතිහාසය මකා දැමීමට අවශ්‍යද?')) {
-                    predictions = [];
-                    localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
-                    updatePredictionsList();
-                    updateStats();
-                    updateCharts();
-                    updateNumberFrequencyGrid();
-                }
-            });
             
             // Update stats
             function updateStats() {
                 document.getElementById('total-predictions').textContent = predictions.length;
                 
-                // Find most popular number
-                const numberCounts = {};
-                predictions.forEach(prediction => {
-                    prediction.numbers.forEach(number => {
-                        numberCounts[number] = (numberCounts[number] || 0) + 1;
+                // Find popular number
+                if (predictions.length > 0) {
+                    const numberCounts = {};
+                    predictions.forEach(pred => {
+                        if (!numberCounts[pred.number]) {
+                            numberCounts[pred.number] = 0;
+                        }
+                        numberCounts[pred.number]++;
                     });
-                });
-                
-                let popularNumber = '-';
-                let maxCount = 0;
-                
-                for (const [number, count] of Object.entries(numberCounts)) {
-                    if (count > maxCount) {
-                        maxCount = count;
-                        popularNumber = number;
+                    
+                    let popularNumber = '';
+                    let maxCount = 0;
+                    
+                    for (const number in numberCounts) {
+                        if (numberCounts[number] > maxCount) {
+                            maxCount = numberCounts[number];
+                            popularNumber = number;
+                        }
                     }
+                    
+                    document.getElementById('popular-number').textContent = popularNumber;
+                } else {
+                    document.getElementById('popular-number').textContent = '-';
                 }
-                
-                document.getElementById('popular-number').textContent = popularNumber;
             }
             
-            // Chart functionality
-            let predictionsChart = null;
-            
-            function updateCharts() {
-                const ctx = document.getElementById('predictions-chart').getContext('2d');
+            // Update chart
+            function updateChart(chartType = 'bar') {
+                const ctx = document.getElementById('predictions-chart');
+                const percentageDisplay = document.getElementById('percentage-display');
                 
-                // Count number frequencies
+                // Show/hide elements based on chart type
+                if (chartType === 'percentage') {
+                    ctx.style.display = 'none';
+                    percentageDisplay.style.display = 'block';
+                    updatePercentageDisplay();
+                    return;
+                } else {
+                    ctx.style.display = 'block';
+                    percentageDisplay.style.display = 'none';
+                }
+                
+                ctx.classList.add('chart-animation');
+                
+                // Count frequency of each number
                 const numberCounts = {};
-                lotteryNumbers.forEach(num => {
-                    numberCounts[num] = 0;
-                });
-                
-                predictions.forEach(prediction => {
-                    prediction.numbers.forEach(number => {
-                        if (numberCounts.hasOwnProperty(number)) {
-                            numberCounts[number]++;
-                        }
-                    });
+                predictions.forEach(pred => {
+                    if (!numberCounts[pred.number]) {
+                        numberCounts[pred.number] = 0;
+                    }
+                    numberCounts[pred.number]++;
                 });
                 
                 // Prepare data for chart
-                const labels = Object.keys(numberCounts);
-                const data = Object.values(numberCounts);
+                const labels = Object.keys(numberCounts).sort();
+                const data = labels.map(label => numberCounts[label]);
                 
-                // Get active chart type
-                const activeChart = document.querySelector('.chart-toggle.active');
-                const chartType = activeChart ? activeChart.getAttribute('data-chart') : 'bar';
-                
-                // Destroy existing chart if it exists
-                if (predictionsChart) {
-                    predictionsChart.destroy();
-                }
-                
-                // Show/hide percentage display
-                const percentageDisplay = document.getElementById('percentage-display');
-                if (chartType === 'percentage') {
-                    percentageDisplay.style.display = 'block';
-                    document.getElementById('predictions-chart').style.display = 'none';
-                    
-                    // Calculate percentages
-                    const totalPredictions = predictions.length;
-                    let percentageHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">';
-                    
-                    for (const [number, count] of Object.entries(numberCounts)) {
-                        const percentage = totalPredictions > 0 ? ((count / totalPredictions) * 100).toFixed(1) : 0;
-                        percentageHtml += `
-                            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
-                                <div style="font-weight: bold; font-size: 1.2rem; color: #6a11cb;">${number}</div>
-                                <div style="font-size: 0.9rem;">${percentage}%</div>
-                                <div style="font-size: 0.8rem; color: #95a5a6;">${count} අනුමාන</div>
-                            </div>
-                        `;
+                // Generate vibrant colors
+                const generateColors = (count) => {
+                    const colors = [];
+                    for (let i = 0; i < count; i++) {
+                        const hue = (i * 360 / count) % 360;
+                        colors.push(`hsl(${hue}, 70%, 60%)`);
                     }
-                    
-                    percentageHtml += '</div>';
-                    percentageDisplay.innerHTML = percentageHtml;
-                    
-                    return;
-                } else {
-                    percentageDisplay.style.display = 'none';
-                    document.getElementById('predictions-chart').style.display = 'block';
+                    return colors;
+                };
+                
+                const backgroundColors = generateColors(labels.length);
+                
+                // Get or create chart
+                if (window.predictionsChart) {
+                    window.predictionsChart.destroy();
                 }
                 
-                // Create new chart
-                if (chartType === 'pie') {
-                    predictionsChart = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                data: data,
-                                backgroundColor: labels.map((_, i) => {
-                                    const hue = (i * 137.508) % 360; // Golden angle approximation
-                                    return `hsl(${hue}, 70%, 65%)`;
-                                }),
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    display: false
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            return `අංක ${context.label}: ${context.raw} අනුමාන`;
-                                        }
-                                    }
-                                }
-                            },
-                            animation: {
-                                animateScale: true,
-                                animateRotate: true
-                            }
-                        }
-                    });
-                } else {
-                    predictionsChart = new Chart(ctx, {
-                        type: 'bar',
+                if (labels.length > 0) {
+                    window.predictionsChart = new Chart(ctx, {
+                        type: chartType,
                         data: {
                             labels: labels,
                             datasets: [{
                                 label: 'අනුමාන ගණන',
                                 data: data,
-                                backgroundColor: '#6a11cb',
-                                borderColor: '#6a11cb',
-                                borderWidth: 1
+                                backgroundColor: backgroundColors,
+                                borderColor: backgroundColors.map(color => color.replace('60%)', '40%)')),
+                                borderWidth: 2,
+                                borderRadius: 5,
+                                hoverBackgroundColor: backgroundColors.map(color => color.replace('60%)', '70%)'))
                             }]
                         },
                         options: {
                             responsive: true,
-                            scales: {
+                            animation: {
+                                duration: 2000,
+                                easing: 'easeOutQuart'
+                            },
+                            scales: chartType === 'bar' ? {
                                 y: {
                                     beginAtZero: true,
                                     title: {
                                         display: true,
-                                        text: 'අනුමාන ගණන'
+                                        text: 'අනුමාන ගණන',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.05)'
                                     }
                                 },
                                 x: {
                                     title: {
                                         display: true,
-                                        text: 'ලොතරැයි අංක'
+                                        text: 'ලොතරැයි අංක',
+                                        font: {
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    grid: {
+                                        display: false
                                     }
                                 }
-                            },
+                            } : {},
                             plugins: {
+                                legend: chartType === 'pie' ? {
+                                    position: 'bottom'
+                                } : { display: false },
                                 tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            return `අනුමාන: ${context.raw}`;
-                                        }
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    titleFont: {
+                                        size: 14
+                                    },
+                                    bodyFont: {
+                                        size: 14
                                     }
                                 }
                             }
                         }
                     });
-                }
-            }
-            
-            // Chart toggle functionality
-            document.querySelectorAll('.chart-toggle').forEach(toggle => {
-                toggle.addEventListener('click', function() {
-                    document.querySelectorAll('.chart-toggle').forEach(t => {
-                        t.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    updateCharts();
-                });
-            });
-            
-            // Update number frequency grid
-            function updateNumberFrequencyGrid() {
-                const frequencyGrid = document.getElementById('number-frequency-grid');
-                frequencyGrid.innerHTML = '';
-                
-                if (predictions.length === 0) {
-                    frequencyGrid.innerHTML = `
-                        <div class="empty-state" style="grid-column: 1 / -1;">
-                            <i class="fas fa-chart-bar"></i>
-                            <p>දත්ත නොමැත. අනුමාන ඇතුළත් කරන්න.</p>
-                        </div>
-                    `;
-                    return;
+                } else {
+                    // Clear chart if no data
+                    const ctx2d = ctx.getContext('2d');
+                    ctx2d.clearRect(0, 0, ctx.width, ctx.height);
+                    ctx2d.font = "16px Poppins";
+                    ctx2d.fillStyle = "#95a5a6";
+                    ctx2d.textAlign = "center";
+                    ctx2d.fillText("දත්ත නොමැත. අනුමාන ඇතුළත් කරන්න.", ctx.width / 2, ctx.height / 2);
                 }
                 
-                // Count number frequencies
-                const numberCounts = {};
-                lotteryNumbers.forEach(num => {
-                    numberCounts[num] = 0;
-                });
-                
-                predictions.forEach(prediction => {
-                    prediction.numbers.forEach(number => {
-                        if (numberCounts.hasOwnProperty(number)) {
-                            numberCounts[number]++;
-                        }
-                    });
-                });
-                
-                // Find max count for percentage calculation
-                const maxCount = Math.max(...Object.values(numberCounts));
-                
-                // Create frequency items for all numbers
-                for (const [number, count] of Object.entries(numberCounts)) {
-                    const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
-                    
-                    const frequencyItem = document.createElement('div');
-                    frequencyItem.className = 'frequency-item';
-                    
-                    const frequencyNumber = document.createElement('div');
-                    frequencyNumber.className = 'frequency-number';
-                    frequencyNumber.textContent = number;
-                    
-                    const frequencyCount = document.createElement('div');
-                    frequencyCount.className = 'frequency-count';
-                    frequencyCount.textContent = `${count} අනුමාන`;
-                    
-                    const frequencyBar = document.createElement('div');
-                    frequencyBar.className = 'frequency-bar';
-                    
-                    const frequencyFill = document.createElement('div');
-                    frequencyFill.className = 'frequency-fill';
-                    frequencyFill.style.width = `${percentage}%`;
-                    
-                    frequencyBar.appendChild(frequencyFill);
-                    
-                    frequencyItem.appendChild(frequencyNumber);
-                    frequencyItem.appendChild(frequencyCount);
-                    frequencyItem.appendChild(frequencyBar);
-                    
-                    frequencyGrid.appendChild(frequencyItem);
-                }
-            }
-            
-            // Export data functionality
-            document.getElementById('export-data').addEventListener('click', function() {
-                // Prepare data for export
-                const exportData = predictions.map(prediction => {
-                    const date = new Date(prediction.date);
-                    return {
-                        'නම': prediction.person,
-                        'අංක': prediction.numbers.join(', '),
-                        'දිනය': `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`,
-                        'වේලාව': `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-                    };
-                });
-                
-                // Create worksheet
-                const ws = XLSX.utils.json_to_sheet(exportData);
-                
-                // Create workbook
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'අනුමාන');
-                
-                // Generate file and trigger download
-                const date = new Date();
-                const fileName = `ලොතරැයි_අනුමාන_${date.getFullYear()}_${(date.getMonth() + 1).toString().padStart(2, '0')}_${date.getDate().toString().padStart(2, '0')}.xlsx`;
-                
-                XLSX.writeFile(wb, fileName);
-                
-                // Show success animation
-                const button = document.getElementById('export-data');
-                const originalHtml = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-check"></i> බාගත කර ඇත!';
-                button.style.backgroundColor = '#2ecc71';
-                
+                // Remove animation class after animation completes
                 setTimeout(() => {
-                    button.innerHTML = originalHtml;
-                    button.style.backgroundColor = '';
-                }, 2000);
-            });
-            
-            // Edit modal functionality
-            function openEditModal(prediction) {
-                const modal = document.getElementById('edit-modal');
-                const editForm = document.getElementById('edit-form');
-                
-                // Populate form
-                editForm.innerHTML = `
-                    <div class="form-group">
-                        <label for="edit-person-name">පුද්ගලයාගේ නම:</label>
-                        <select id="edit-person-name">
-                            ${members.map(member => `
-                                <option value="${member}" ${member === prediction.person ? 'selected' : ''}>${member}</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>අංක තෝරන්න:</label>
-                        <div class="number-grid" id="edit-number-grid">
-                            ${lotteryNumbers.map(num => `
-                                <div class="number-item">
-                                    <input type="checkbox" name="edit-grid-number" id="edit-grid-${num}" value="${num}" ${prediction.numbers.includes(num) ? 'checked' : ''}>
-                                    <label for="edit-grid-${num}">${num}</label>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>තෝරාගත් අංක:</label>
-                        <div class="selected-numbers-container">
-                            <div class="selected-numbers" id="edit-selected-numbers">
-                                ${prediction.numbers.map(num => `
-                                    <div class="selected-number">
-                                        ${num}
-                                        <button type="button" class="remove-number" data-number="${num}">×</button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button type="button" class="btn-add" id="save-edit">
-                        <i class="fas fa-save"></i> ගබඩා කරන්න
-                    </button>
-                `;
-                
-                // Show modal
-                modal.style.display = 'flex';
-                
-                // Add event listeners to number checkboxes
-                document.querySelectorAll('#edit-number-grid input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        updateEditSelectedNumbers();
-                    });
-                });
-                
-                // Add event listeners to remove buttons
-                document.querySelectorAll('#edit-selected-numbers .remove-number').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const numberToRemove = this.getAttribute('data-number');
-                        const checkbox = document.getElementById(`edit-grid-${numberToRemove}`);
-                        checkbox.checked = false;
-                        updateEditSelectedNumbers();
-                    });
-                });
-                
-                // Save edit functionality
-                document.getElementById('save-edit').addEventListener('click', function() {
-                    const selectedNumbers = Array.from(document.querySelectorAll('#edit-number-grid input[type="checkbox"]:checked'))
-                        .map(input => input.value);
-                    
-                    if (selectedNumbers.length === 0) {
-                        alert('කරුණාකර අවම වශයෙන් එක් අංකයක්වත් තෝරන්න!');
-                        return;
-                    }
-                    
-                    const personName = document.getElementById('edit-person-name').value;
-                    
-                    // Update prediction
-                    const index = predictions.findIndex(p => p.id === prediction.id);
-                    if (index !== -1) {
-                        predictions[index].person = personName;
-                        predictions[index].numbers = selectedNumbers;
-                        localStorage.setItem('lotteryPredictions', JSON.stringify(predictions));
-                        
-                        // Update UI
-                        updatePredictionsList();
-                        updateMembersList();
-                        updateStats();
-                        updateCharts();
-                        updateNumberFrequencyGrid();
-                        
-                        // Close modal
-                        modal.style.display = 'none';
-                    }
-                });
-                
-                // Close modal when clicking on X
-                document.querySelector('.close').addEventListener('click', function() {
-                    modal.style.display = 'none';
-                });
-                
-                // Close modal when clicking outside
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
+                    ctx.classList.remove('chart-animation');
+                }, 1000);
             }
             
-            function updateEditSelectedNumbers() {
-                const selectedNumbersContainer = document.getElementById('edit-selected-numbers');
-                selectedNumbersContainer.innerHTML = '';
+            // Update percentage display
+            function updatePercentageDisplay() {
+                const percentageDisplay = document.getElementById('percentage-display');
                 
-                const selectedNumbers = Array.from(document.querySelectorAll('#edit-number-grid input[type="checkbox"]:checked'))
-                    .map(input => input.value);
+                // Count frequency of each number
+                const numberCounts = {};
+                predictions.forEach(pred => {
+                    if (!numberCounts[pred.number]) {
+                        numberCounts[pred.number] = 0;
+                    }
+                    numberCounts[pred.number]++;
+                });
                 
-                if (selectedNumbers.length === 0) {
-                    selectedNumbersContainer.innerHTML = '<div class="empty-selection">තෝරාගත් අංක නොමැත</div>';
-                    return;
+                // Calculate percentages
+                const total = predictions.length;
+                const percentages = {};
+                
+                for (const number in numberCounts) {
+                    percentages[number] = ((numberCounts[number] / total) * 100).toFixed(2);
                 }
                 
-                selectedNumbers.forEach(num => {
-                    const numberElement = document.createElement('div');
-                    numberElement.className = 'selected-number';
-                    numberElement.innerHTML = `
-                        ${num}
-                        <button type="button" class="remove-number" data-number="${num}">×</button>
-                    `;
-                    selectedNumbersContainer.appendChild(numberElement);
-                });
+                // Sort by percentage (descending)
+                const sortedNumbers = Object.keys(percentages).sort((a, b) => percentages[b] - percentages[a]);
                 
-                // Add event listeners to remove buttons
-                document.querySelectorAll('#edit-selected-numbers .remove-number').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const numberToRemove = this.getAttribute('data-number');
-                        const checkbox = document.getElementById(`edit-grid-${numberToRemove}`);
-                        checkbox.checked = false;
-                        updateEditSelectedNumbers();
+                // Create HTML for display
+                let html = '<h3>අනුමාන ප්‍රතිශත</h3>';
+                
+                if (sortedNumbers.length > 0) {
+                    sortedNumbers.forEach(number => {
+                        html += `
+                            <div style="margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>අංක ${number}:</span>
+                                    <span>${percentages[number]}%</span>
+                                </div>
+                                <div style="height: 10px; background: #e1e5eb; border-radius: 5px; margin-top: 5px;">
+                                    <div style="height: 100%; width: ${percentages[number]}%; background: var(--primary); border-radius: 5px;"></div>
+                                </div>
+                            </div>
+                        `;
                     });
-                });
+                } else {
+                    html += '<p>දත්ත නොමැත. අනුමාන ඇතුළත් කරන්න.</p>';
+                }
+                
+                percentageDisplay.innerHTML = html;
             }
             
-            // Initialize the application
-            updateMembersList();
+            // Initialize with data from localStorage
+            updateSelectedNumbers();
             updatePredictionsList();
+            updateChart();
             updateStats();
-            updateCharts();
-            updateNumberFrequencyGrid();
-            
-            // Add pulse animation to stats
-            setInterval(() => {
-                document.querySelectorAll('.stat-value').forEach(value => {
-                    value.classList.toggle('pulse');
-                });
-            }, 3000);
+            updateMembersList();
+            updateNumberFrequency();
         });
     </script>
 </body>
