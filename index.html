@@ -294,7 +294,7 @@
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -934,7 +934,13 @@
             <div class="right-panel">
                 <!-- NEW: Consensus summary card (special section) -->
                 <div class="card consensus-card" id="consensus-card">
-                    <h2>විශේෂ සාරාංශ — අනුමාන සංවිධානය (අනුමාන ≥ 2)</h2>
+                    <h2>
+                        <span>විශේෂ සාරාංශ — අනුමාන සංවිධානය (අනුමාන ≥ 2)</span>
+                        <!-- ADDED: export button for consensus -->
+                        <button class="btn-add" id="export-consensus">
+                            <i class="fas fa-file-excel"></i> සාරාංශය බාගත කරන්න
+                        </button>
+                    </h2>
                     <div id="consensus-content" class="consensus-list">
                         <div class="empty-state">
                             <i class="fas fa-bullseye"></i>
@@ -968,7 +974,7 @@
                     
                     <div class="chart-toggles">
                         <button class="chart-toggle active" data-chart="bar">තීරු ප්‍රස්තාරය</button>
-                        <button class="chart-toggle" data-chart="pie">වෘත ප්‍රස්තාරය</button>
+                        <button class="chart-toggle" data-chart="pie">පයි ප්‍රස්තාරය</button>
                         <button class="chart-toggle" data-chart="percentage">ප්‍රතිශත</button>
                     </div>
                     
@@ -2077,6 +2083,53 @@
             /* ----------------------
                END: Consensus summary
                ---------------------- */
+
+            /* ----------------------
+               NEW: Export consensus to Excel (ADDED)
+               ---------------------- */
+            function computeConsensusArray() {
+                if (!predictions || predictions.length === 0) return [];
+                const map = {};
+                predictions.forEach(p => {
+                    if (!map[p.number]) map[p.number] = new Set();
+                    map[p.number].add(p.name);
+                });
+                const arr = Object.keys(map).map(num => {
+                    const members = Array.from(map[num]);
+                    return { number: num, count: members.length, members };
+                }).filter(item => item.count >= 2);
+                arr.sort((a, b) => {
+                    if (b.count !== a.count) return b.count - a.count;
+                    return (parseInt(a.number, 10) || 0) - (parseInt(b.number, 10) || 0);
+                });
+                return arr;
+            }
+
+            function exportConsensusToExcel() {
+                const arr = computeConsensusArray();
+                if (arr.length === 0) {
+                    showCustomAlert('error', 'දත්ත නැත', 'අනුමාන ≥ 2 ඇති අංක සාරාංශයක් නොමැත.');
+                    return;
+                }
+                const data = arr.map(item => ({
+                    'අංකය': item.number,
+                    'සාමාජිකයින් ගණන (≥2)': item.count,
+                    'සාමාජිකයින් ලැයිස්තුව': item.members.join(', ')
+                }));
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'විශේෂ සාරාංශ');
+                const fname = 'විශේෂ_සාරාංශ_අනුමාන_≥2_' + new Date().toISOString().slice(0,10) + '.xlsx';
+                XLSX.writeFile(wb, fname);
+                showCustomAlert('success', 'සාර්ථකයි', 'විශේෂ සාරාංශය Excel ලෙස බාගත විය.');
+            }
+
+            // Bind export button (ADDED)
+            const exportConsensusBtn = document.getElementById('export-consensus');
+            if (exportConsensusBtn) {
+                exportConsensusBtn.addEventListener('click', exportConsensusToExcel);
+            }
+            /* ---------------------- */
 
             // Initialize with data from localStorage
             updateSelectedNumbers();
