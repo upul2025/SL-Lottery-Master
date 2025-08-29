@@ -603,6 +603,44 @@
             word-break: break-all;
         }
 
+        /* Consensus (special) card styles */
+        .consensus-card {
+            border: 2px solid rgba(106,17,203,0.12);
+            background: linear-gradient(180deg, rgba(106,17,203,0.03), white);
+            box-shadow: 0 6px 20px rgba(106,17,203,0.06);
+        }
+        .consensus-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .consensus-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            background: #fff;
+            border: 1px solid #f1f1f1;
+        }
+        .consensus-item .num {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--primary);
+        }
+        .consensus-badge {
+            background: var(--secondary);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        .consensus-members {
+            font-size: 0.85rem;
+            color: var(--dark);
+            margin-top: 6px;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -894,6 +932,17 @@
             </div>
             
             <div class="right-panel">
+                <!-- NEW: Consensus summary card (special section) -->
+                <div class="card consensus-card" id="consensus-card">
+                    <h2>විශේෂ සාරාංශ — අනුමාන සංවිධානය (අනුමාන ≥ 2)</h2>
+                    <div id="consensus-content" class="consensus-list">
+                        <div class="empty-state">
+                            <i class="fas fa-bullseye"></i>
+                            <p>පහසුකම් සඳහා - මෙම කොටස ඔබගේ අනුමානවලින් ස්වයංක්‍රීයව යාවත්කාලීන කෙරේ. (සමාජිකයන් දෙදෙනකුට වැඩි දී ඇති අංක පමණි)</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">මුළු අනුමාන</div>
@@ -1595,6 +1644,8 @@
                             <p>අනුමාන නොමැත</p>
                         </div>
                     `;
+                    // Also update consensus (empty)
+                    updateConsensusSummary();
                     return;
                 }
                 
@@ -1644,6 +1695,9 @@
                 // Setup edit and delete buttons
                 setupPredictionEditButtons();
                 setupPredictionDeleteButtons();
+
+                // Update consensus summary after listing predictions
+                updateConsensusSummary();
             }
             
             // Update members list
@@ -1949,7 +2003,81 @@
                 
                 percentageDisplay.innerHTML = html;
             }
-            
+
+            /* ----------------------
+               NEW: Consensus summary
+               Logic: For each number, count UNIQUE members who selected it.
+               Only show numbers with count >= 2. Sort by count desc, then number asc.
+               ---------------------- */
+            function updateConsensusSummary() {
+                const container = document.getElementById('consensus-content');
+                container.innerHTML = '';
+
+                if (!predictions || predictions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-bullseye"></i>
+                            <p>දත්ත නොමැත. සාමාජිකයින්ගේ අනුමාන ඇතුළත් කිරීමට ඉඳහිට.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Build map: number -> Set of member names
+                const map = {}; // { '01': Set('A','B'), ... }
+                predictions.forEach(p => {
+                    if (!map[p.number]) {
+                        map[p.number] = new Set();
+                    }
+                    map[p.number].add(p.name);
+                });
+
+                // Convert to array of { number, count, members } for numbers with count>=2
+                const arr = Object.keys(map).map(num => {
+                    const membersSet = Array.from(map[num]);
+                    return {
+                        number: num,
+                        count: membersSet.length,
+                        members: membersSet
+                    };
+                }).filter(item => item.count >= 2);
+
+                // Sort by count desc, then number asc (numeric)
+                arr.sort((a, b) => {
+                    if (b.count !== a.count) return b.count - a.count;
+                    // compare numeric value even when '00' present
+                    return (parseInt(a.number, 10) || 0) - (parseInt(b.number, 10) || 0);
+                });
+
+                if (arr.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-bullseye"></i>
+                            <p>දැනටමත් එක් සාමාජිකයකින් පමණක් අනුමත වූ අංක කිසිවක් නොමැත.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Build DOM list
+                arr.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'consensus-item';
+                    const membersShort = item.members.join(', ');
+                    itemDiv.innerHTML = `
+                        <div>
+                            <div class="num">අංක ${item.number}</div>
+                            <div class="consensus-members">සාමාජිකයින් (${item.count}): ${membersShort}</div>
+                        </div>
+                        <div class="consensus-badge">${item.count}</div>
+                    `;
+                    container.appendChild(itemDiv);
+                });
+            }
+            /* ----------------------
+               END: Consensus summary
+               ---------------------- */
+
             // Initialize with data from localStorage
             updateSelectedNumbers();
             updatePredictionsList();
